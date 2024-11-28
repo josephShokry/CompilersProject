@@ -3,4 +3,6 @@ project(CompilersProject)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(CompilersProject main.cpp)
+add_executable(CompilersProject main.cpp
+        lexicalAnalyser/LexicalAnalyser.cpp
+        lexicalAnalyser/LexicalAnalyser.h)
