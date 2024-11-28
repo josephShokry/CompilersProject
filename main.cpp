@@ -1,21 +1,19 @@
 #include <fstream>
 #include <iostream>
 
-#include "lexicalAnalyser/LexicalAnalyser.h"
+#include "LexicalAnalyser/LexicalAnalyser.h"
 
 
 using namespace std;
 
 int main() {
-    string rulesFilePath = "testFiles/rules.txt";
-    string codeFilePath = "testFiles/codeExample.txt";
+    string rules_file_path = "testFiles/rules.txt";
+    string code_file_path = "testFiles/codeExample.txt";
 
-    LexicalAnalyser lexicalAnalyser;
-    lexicalAnalyser.parseRules(rulesFilePath);
-    lexicalAnalyser.parseCode(codeFilePath);
+    lexical_analyser* analyser = new lexical_analyser(rules_file_path, code_file_path);
 
-    while (lexicalAnalyser.hasNext()) {
-        cout<<lexicalAnalyser.getNextToken()<<endl;
+    while (analyser->has_next()) {
+        cout<<analyser->get_next_token()<<endl;
     }
 
     return 0;

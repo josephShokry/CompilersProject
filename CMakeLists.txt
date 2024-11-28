@@ -4,5 +4,11 @@ project(CompilersProject)
 set(CMAKE_CXX_STANDARD 20)
 
 add_executable(CompilersProject main.cpp
-        lexicalAnalyser/LexicalAnalyser.cpp
-        lexicalAnalyser/LexicalAnalyser.h)
+        src/LexicalAnalyser/LexicalAnalyser.cpp
+        src/LexicalAnalyser/LexicalAnalyser.h
+        src/Node/Node.cpp
+        src/Node/Node.h
+        src/NFA/NFA.cpp
+        src/NFA/NFA.h
+        DFA/DFA.cpp
+        DFA/DFA.h)
