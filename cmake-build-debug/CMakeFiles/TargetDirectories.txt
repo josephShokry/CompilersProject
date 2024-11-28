@@ -1,0 +1,3 @@
+D:/hard/colleage/9th semester/compilers/project/CompilersProject/cmake-build-debug/CMakeFiles/CompilersProject.dir
+D:/hard/colleage/9th semester/compilers/project/CompilersProject/cmake-build-debug/CMakeFiles/edit_cache.dir
+D:/hard/colleage/9th semester/compilers/project/CompilersProject/cmake-build-debug/CMakeFiles/rebuild_cache.dir
