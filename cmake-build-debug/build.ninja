@@ -73,11 +73,11 @@ build CMakeFiles/CompilersProject.dir/src/NFA/NFA.cpp.obj: CXX_COMPILER__Compile
   OBJECT_DIR = CMakeFiles\CompilersProject.dir
   OBJECT_FILE_DIR = CMakeFiles\CompilersProject.dir\src\NFA
 
-build CMakeFiles/CompilersProject.dir/DFA/DFA.cpp.obj: CXX_COMPILER__CompilersProject_unscanned_Debug D$:/hard/colleage/9th$ semester/compilers/project/CompilersProject/DFA/DFA.cpp || cmake_object_order_depends_target_CompilersProject
-  DEP_FILE = CMakeFiles\CompilersProject.dir\DFA\DFA.cpp.obj.d
+build CMakeFiles/CompilersProject.dir/src/DFA/DFA.cpp.obj: CXX_COMPILER__CompilersProject_unscanned_Debug D$:/hard/colleage/9th$ semester/compilers/project/CompilersProject/src/DFA/DFA.cpp || cmake_object_order_depends_target_CompilersProject
+  DEP_FILE = CMakeFiles\CompilersProject.dir\src\DFA\DFA.cpp.obj.d
   FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
   OBJECT_DIR = CMakeFiles\CompilersProject.dir
-  OBJECT_FILE_DIR = CMakeFiles\CompilersProject.dir\DFA
+  OBJECT_FILE_DIR = CMakeFiles\CompilersProject.dir\src\DFA
 
 
 # =============================================================================
@@ -87,7 +87,7 @@ build CMakeFiles/CompilersProject.dir/DFA/DFA.cpp.obj: CXX_COMPILER__CompilersPr
 #############################################
 # Link the executable CompilersProject.exe
 
-build CompilersProject.exe: CXX_EXECUTABLE_LINKER__CompilersProject_Debug CMakeFiles/CompilersProject.dir/main.cpp.obj CMakeFiles/CompilersProject.dir/src/LexicalAnalyser/LexicalAnalyser.cpp.obj CMakeFiles/CompilersProject.dir/src/Node/Node.cpp.obj CMakeFiles/CompilersProject.dir/src/NFA/NFA.cpp.obj CMakeFiles/CompilersProject.dir/DFA/DFA.cpp.obj
+build CompilersProject.exe: CXX_EXECUTABLE_LINKER__CompilersProject_Debug CMakeFiles/CompilersProject.dir/main.cpp.obj CMakeFiles/CompilersProject.dir/src/LexicalAnalyser/LexicalAnalyser.cpp.obj CMakeFiles/CompilersProject.dir/src/Node/Node.cpp.obj CMakeFiles/CompilersProject.dir/src/NFA/NFA.cpp.obj CMakeFiles/CompilersProject.dir/src/DFA/DFA.cpp.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\CompilersProject.dir

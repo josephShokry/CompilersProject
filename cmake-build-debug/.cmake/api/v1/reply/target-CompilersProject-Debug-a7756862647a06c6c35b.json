@@ -155,12 +155,12 @@
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "DFA/DFA.cpp",
+			"path" : "src/DFA/DFA.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
 			"backtrace" : 1,
-			"path" : "DFA/DFA.h",
+			"path" : "src/DFA/DFA.h",
 			"sourceGroupIndex" : 1
 		}
 	],
