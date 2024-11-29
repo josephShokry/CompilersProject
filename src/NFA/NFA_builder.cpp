@@ -131,8 +131,13 @@ void NFA_builder::make_token_nfa() {
 // NFA NFA_builder::combined_nfa() {
 //     return NFA(); // Return a default NFA object (replace with logic if needed)
 // }
+void NFA_builder::set_pre_defined_tokens() {
+    for (auto [token, vec]: token_to_regex_split) {
+        pre_defined_tokens.insert(token);
+    }
+}
 
-vector<string> NFA_builder::tokenize_rules(const string &input, const unordered_set<string> &predefinedTokens) {
+vector<string> NFA_builder::tokenize_rule(const string input) {
     vector<string> tokens; // List of tokens
     size_t start = 0;
 
@@ -143,7 +148,7 @@ vector<string> NFA_builder::tokenize_rules(const string &input, const unordered_
         // Find the longest matching predefined token
         while (end < input.size()) {
             string candidate = input.substr(start, end - start + 1);
-            if (predefinedTokens.find(candidate) != predefinedTokens.end()) {
+            if (pre_defined_tokens.find(candidate) != pre_defined_tokens.end()) {
                 longestMatch = candidate;
             }
             end++;
@@ -161,3 +166,15 @@ vector<string> NFA_builder::tokenize_rules(const string &input, const unordered_
 
     return tokens;
 }
+
+void NFA_builder::map_regex_to_tokens() {
+    for (auto &[token, v] : token_to_regex_split) {
+        if (v.size() == 1) {
+            string regex_to_be_tokenized = v.back();
+            v.pop_back();
+            vector<string> tokens = tokenize_rule(regex_to_be_tokenized);
+            v = add_concatenation_symbol(tokens);
+        }
+    }
+}
+

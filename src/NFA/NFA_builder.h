@@ -18,10 +18,19 @@ private:
     map<string, vector<string>> token_to_regex_split;
     // map<string, NFA> token_to_NFA;
     vector<string> rules;
+    unordered_set<string> pre_defined_tokens;
+
+    void delete_character_from_string(string &rule, const char letter);
+
     void split_keywords_and_punctuation(string rule, int priority);
     void split_regular_definitions_and_expressions(string rule, int priority);
     vector<string>split_to_characters(string input);
     vector<string> add_concatenation_symbol(vector<string> tokens);
+
+    void set_pre_defined_tokens();
+
+    vector<string> tokenize_rule(const string input);
+
 
 public:
     void extract_rules(string rules_file_path);
@@ -30,7 +39,9 @@ public:
     void split_reserved_or_punc();
     void split_reg_def();
     void make_token_nfa();
-    vector<string> tokenize_rules(const string &input, const unordered_set<string> &predefinedTokens);
+
+    void map_regex_to_tokens();
+
     // NFA combined_nfa();
 };
 

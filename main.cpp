@@ -25,13 +25,26 @@
 #include "bits/stdc++.h"
 #include "src/Utils/utils.h"
 using namespace std;
+
 #define conc_symbol "#"
 map<string, int> token_to_priority;
-map<string, vector<string>> token_to_regex_split;
+map<string, vector<string> > token_to_regex_split;
 // map<string, NFA> token_to_NFA;
+unordered_set<string> pre_defined_tokens;
+
 vector<string> rules;
 
-vector<string> tokenize_rules(const string &input, const unordered_set<string> &predefinedTokens) {
+void delete_character_from_string(string &rule, const char letter) {
+    erase(rule, letter);
+}
+
+void set_pre_defined_tokens() {
+    for (auto [token, vec]: token_to_regex_split) {
+        pre_defined_tokens.insert(token);
+    }
+}
+
+vector<string> tokenize_rule(const string input) {
     vector<string> tokens; // List of tokens
     size_t start = 0;
 
@@ -42,7 +55,7 @@ vector<string> tokenize_rules(const string &input, const unordered_set<string> &
         // Find the longest matching predefined token
         while (end < input.size()) {
             string candidate = input.substr(start, end - start + 1);
-            if (predefinedTokens.find(candidate) != predefinedTokens.end()) {
+            if (pre_defined_tokens.find(candidate) != pre_defined_tokens.end()) {
                 longestMatch = candidate;
             }
             end++;
@@ -60,6 +73,7 @@ vector<string> tokenize_rules(const string &input, const unordered_set<string> &
 
     return tokens;
 }
+
 // Method to extract rules from the file
 void extract_rules(string rules_file_path) {
     vector<string> lines;
@@ -164,23 +178,29 @@ void split_rules() {
         }
     }
 }
+void map_regex_to_tokens() {
+    for (auto &[token, v] : token_to_regex_split) {
+        if (v.size() == 1) {
+            string regex_to_be_tokenized = v.back();
+            v.pop_back();
+            vector<string> tokens = tokenize_rule(regex_to_be_tokenized);
+            v = add_concatenation_symbol(tokens);
+        }
+    }
+}
 
 int main() {
-    extract_rules("C:/Users/CompuFast/Desktop/compilers/project/CompilersProject/input_rules.txt");
-    // for(const auto x : rules) {
-    //     // cout<<utils::remove_spaces_from_regex(x)<<"\n";
-    //     // cout << x << "\n";
-    // }
+    extract_rules("C:\\Users\\alsay\\CLionProjects\\CompilersProject\\input_rules.txt");
     split_rules();
-    for(const auto& [fst, snd]: token_to_priority) {
-        cout << fst << " "<< snd<< endl;
-    }
-    for(const auto&[fst, snd]: token_to_regex_split) {
-        cout << fst <<" ";
-        for(const auto& token: snd) {
-            cout << token << " ";
+    set_pre_defined_tokens();
+    map_regex_to_tokens();
+    for (auto &[token, v] : token_to_regex_split) {
+        cout << "Token : [" << token << "] -> ";
+        for (auto &x : v) {
+            cout << x << " ";
         }
-        cout<<"\n";
+        cout << endl;
     }
+    // for (auto x: pre_defined_tokens) cout << x << " ";
 
 }
