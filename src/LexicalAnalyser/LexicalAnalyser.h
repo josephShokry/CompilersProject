@@ -23,7 +23,7 @@ private:
 
 public:
     // Parses the rules of the language from a specified file path
-    vector<string> extract_rules(string rules_file_path);
+    void extract_rules(string rules_file_path);
 
     // Parses the code to be analyzed, using the previously set rules file path
     vector<string> set_code(string code_file_path);

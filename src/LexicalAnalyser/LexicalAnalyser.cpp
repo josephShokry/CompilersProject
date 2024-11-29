@@ -2,6 +2,9 @@
 #include <vector>
 #include <bits/stdc++.h>
 #include "../Node/Node.h"
+#include "../NFA/NFA.h"
+#include "../DFA/DFA.h"
+#include "../NFA/NFA_builder.h"
 
 using namespace std;
 
@@ -12,20 +15,22 @@ private:
     map<string,string> symbol_table;
     int start_indx = 0;
 
+    NFA_builder nfa_buidler;
+
     // Reads the contents of a file (returns NULL for now, to be implemented)
     string read_file(string file_path) {
         return NULL;
     }
 
     // to set the rules of the language
-    vector<string> extract_rules(string rules_file_path) {
-
+    void extract_rules(string rules_file_path) {
+        nfa_buidler.
     }
 
     // to set the code that being analyzed against the ruled added previously
     vector<string> set_code(string code_file_path) {
         code_text = read_file(code_file_path);
-        return NULL;
+        return vector<string>();
     }
 
     // construct a single start NFA from the rules
