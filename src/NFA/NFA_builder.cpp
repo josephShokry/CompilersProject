@@ -20,7 +20,7 @@ void NFA_builder::extract_rules(string rules_file_path) {
     this->rules = lines;
 }
 
-vector<string> add_concatenation_symbol(vector<string> tokens) {
+vector<string> NFA_builder::add_concatenation_symbol(vector<string> tokens) {
     if (tokens.size() == 0) {
         assert("Error, token is empty");
     }
@@ -55,6 +55,7 @@ vector<string> NFA_builder::split_to_characters(string input) {
     }
     return result;
 }
+
 
 void NFA_builder::split_keywords_and_punctuation(string rule, int priority) {
     bool keyword = rule[0] == '{';
@@ -127,11 +128,11 @@ void NFA_builder::make_token_nfa() {
 }
 
 // Method to combine individual NFAs into a single NFA
-NFA NFA_builder::combined_nfa() {
-    return NFA(); // Return a default NFA object (replace with logic if needed)
-}
+// NFA NFA_builder::combined_nfa() {
+//     return NFA(); // Return a default NFA object (replace with logic if needed)
+// }
 
-vector<string> tokenize_rules(const string &input, const unordered_set<string> &predefinedTokens) {
+vector<string> NFA_builder::tokenize_rules(const string &input, const unordered_set<string> &predefinedTokens) {
     vector<string> tokens; // List of tokens
     size_t start = 0;
 
