@@ -5,8 +5,10 @@
 #ifndef DFA_H
 #define DFA_H
 
+#include <bits/stdc++.h>
+#include "../Node/Node.h"
 
-
+using namespace std;
 class DFA {
 private:
     int starting_id;
@@ -16,7 +18,10 @@ private:
 
 public:
     void minimize();
-    set<Node> getNextNodes(Node curent_node, char transition_char);
+    set<Node> getNextNodes(const Node &current_node, char transition_char);
+    int getNextNodeId(int node_id, char transition_char);
+    int getStartingStateId();
+    bool isAcceptingState(int node_id);
 };
 
 

@@ -2,6 +2,8 @@
 #ifndef LEXICAL_ANALYSER_H
 #define LEXICAL_ANALYSER_H
 
+#include "../Node/Node.h"
+#include "../DFA/DFA.h"
 #include <string>
 #include <bits/stdc++.h>
 
@@ -33,6 +35,9 @@ public:
 
     // Check if the lexical analyser can get more token or not
     bool has_next();
+    void set_dfa(DFA dfa);
+    DFA get_dfa();
+
 
     lexical_analyser(const string &rules_file_path, const string &code_file_path);
 };

@@ -13,7 +13,6 @@ class NFA {
 private:
     Node* start_node = nullptr;
     Node* end_node = nullptr;
-
     void generate(vector<string> regular_definitions) {
 
     }
