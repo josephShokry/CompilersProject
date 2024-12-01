@@ -68,9 +68,6 @@ void DFA::minimize() {
                 }
             }
         }
-        // for (int i = 1;i<v.size();i++) {
-        //     transition_table.erase(v[i]);
-        // }
     }
     map<int, map<char, int>> new_transition_table;
     for (auto it: transition_table) {
@@ -115,13 +112,10 @@ int DFA::get_next_node_id(int node_id, char transition_char) {
     return transition_table[node_id][transition_char];
 }
 
-set<Node> DFA::getNextNodes(const Node &current_node, char transition_char) {
-    // TODO: implement this
-    // int current_id = get_id_from_node(current_node);
-    // set<Node> next_nodes = id_to_state[transition_table[current_id][transition_char]];
-    // return next_nodes;
-    set<Node> sett;
-    return sett;
+set<Node*> DFA::getNextNodes(Node* current_node, char transition_char) {
+    int current_id = get_id_from_node(current_node);
+    set<Node*> next_nodes = id_to_state[transition_table[current_id][transition_char]];
+    return next_nodes;
 }
 
 int DFA::get_id_from_node(Node* node) {

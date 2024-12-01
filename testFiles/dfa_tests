@@ -90,3 +90,38 @@
          nfa.end_node = state10;  // The final state
 
          return nfa;
+         ------------------------------------------------------------
+ // minimize dfa test
+ // Create nodes
+     Node* state0 = new Node(0, true, false);  // Start state
+     Node* state1 = new Node(1, false, true);
+     Node* state2 = new Node(2, false, true);
+     Node* state3 = new Node(3);
+     Node* state4 = new Node(4, false, true);
+     Node* state5 = new Node(5); // Accepting state
+
+     // Define transitions
+     state0->add_neighbour('a', state3);  // Epsilon transition to state 1
+     state0->add_neighbour('b', state1);  // Epsilon transition to state 1
+
+     state1->add_neighbour('a', state2);  // Epsilon transition to state 1
+     state1->add_neighbour('b', state5);  // Epsilon transition to state 1
+
+     state2->add_neighbour('a', state2);  // Epsilon transition to state 1
+     state2->add_neighbour('b', state5);  // Epsilon transition to state 1
+
+     state3->add_neighbour('a', state0);  // Epsilon transition to state 1
+     state3->add_neighbour('b', state4);  // Epsilon transition to state 1
+
+     state4->add_neighbour('a', state2);  // Epsilon transition to state 1
+     state4->add_neighbour('b', state5);  // Epsilon transition to state 1
+
+     state5->add_neighbour('a', state5);  // Epsilon transition to state 1
+     state5->add_neighbour('b', state5);  // Epsilon transition to state 1
+
+
+     // Build NFA
+     NFA nfa({});
+     nfa.start_node = state0;
+     nfa.end_node = state5;  // The final state
+     --------------------------------------------------

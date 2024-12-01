@@ -30,7 +30,7 @@ private:
     int get_next_node_id(int node_id, char transition_char);
 
     void update_mapp(map<vector<int>, int> &mapp, vector<vector<int>> &sets);
-    set<Node> getNextNodes(const Node &current_node, char transition_char);
+    set<Node*> getNextNodes(Node* current_node, char transition_char);
 
 public:
     DFA(NFA nfa);
