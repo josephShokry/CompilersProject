@@ -10,45 +10,36 @@ NFA::NFA(vector<string> regular_definitions) {
 NFA NFA::construct_example_nfa() {
     // Create nodes
     Node* state0 = new Node(0, true, false);  // Start state
-    Node* state1 = new Node(1);
-    Node* state2 = new Node(2);
+    Node* state1 = new Node(1, false, true);
+    Node* state2 = new Node(2, false, true);
     Node* state3 = new Node(3);
-    Node* state4 = new Node(4);
-    Node* state5 = new Node(5);
-    Node* state6 = new Node(6);
-    Node* state7 = new Node(7);
-    Node* state8 = new Node(8);
-    Node* state9 = new Node(9);
-    Node* state10 = new Node(10, false, true); // Accepting state
+    Node* state4 = new Node(4, false, true);
+    Node* state5 = new Node(5); // Accepting state
 
     // Define transitions
-    state0->add_neighbour('$', state1);  // Epsilon transition to state 1
-    state0->add_neighbour('$', state7);  // Epsilon transition to state 4
+    state0->add_neighbour('a', state3);  // Epsilon transition to state 1
+    state0->add_neighbour('b', state1);  // Epsilon transition to state 1
 
-    state1->add_neighbour('$', state2);  // Epsilon transition to state 2
-    state1->add_neighbour('$', state4);  // Epsilon transition to state 6
+    state1->add_neighbour('a', state2);  // Epsilon transition to state 1
+    state1->add_neighbour('b', state5);  // Epsilon transition to state 1
 
-    state2->add_neighbour('a', state3);  // Transition to state 3 on 'a'
+    state2->add_neighbour('a', state2);  // Epsilon transition to state 1
+    state2->add_neighbour('b', state5);  // Epsilon transition to state 1
 
-    state3->add_neighbour('$', state6);  // Epsilon transition to state 6
+    state3->add_neighbour('a', state0);  // Epsilon transition to state 1
+    state3->add_neighbour('b', state4);  // Epsilon transition to state 1
 
-    state4->add_neighbour('b', state5);  // Transition to state 5 on 'b'
+    state4->add_neighbour('a', state2);  // Epsilon transition to state 1
+    state4->add_neighbour('b', state5);  // Epsilon transition to state 1
 
-    state5->add_neighbour('$', state6);  // Epsilon transition to state 6
+    state5->add_neighbour('a', state5);  // Epsilon transition to state 1
+    state5->add_neighbour('b', state5);  // Epsilon transition to state 1
 
-    state6->add_neighbour('$', state7);  // Epsilon transition to state 7
-    state6->add_neighbour('$', state1);  // Epsilon transition to state 1
-
-    state7->add_neighbour('a', state8);  // Transition to state 8 on 'a'
-
-    state8->add_neighbour('b', state9);  // Transition to state 9 on 'b'
-
-    state9->add_neighbour('b', state10);  // Transition to state 10 on 'b'
 
     // Build NFA
     NFA nfa({});
     nfa.start_node = state0;
-    nfa.end_node = state10;  // The final state
+    nfa.end_node = state5;  // The final state
 
     return nfa;
 

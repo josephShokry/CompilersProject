@@ -25,6 +25,10 @@ int main() {
     // Optionally, print out or verify the DFA contents here
     // For example, printing the start state of the DFA
     dfa.print_transition_table();
+    cout<<"###############33"<<endl;
+    dfa.minimize();
+    dfa.print_transition_table();
+
 
     return 0;
 }
