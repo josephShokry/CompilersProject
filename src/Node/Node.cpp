@@ -12,18 +12,12 @@ private:
     int id;
     bool is_start;
     bool is_accepting;
-    map<char, Node> neighbours;
-    // add them sorted depending on the priority
+    map<char, vector<Node*>> neighbours;
     vector<string> tokens;
+
 public:
-    Node(int id, bool is_start, bool is_accepting,
-        const map<char, Node> &neighbours, const vector<string> &tokens)
-        : id(id),
-          is_start(is_start),
-          is_accepting(is_accepting),
-          neighbours(neighbours),
-          tokens(tokens) {
-    }
+    Node(int id, bool is_start = false, bool is_accepting = false)
+        : id(id), is_start(is_start), is_accepting(is_accepting) {}
 
     int id1() const {
         return id;
@@ -37,11 +31,28 @@ public:
         return is_accepting;
     }
 
-    map<char, Node> neighbours1() const {
+    map<char, vector<Node*>> neighbours1() const {
         return neighbours;
+    }
+
+    void add_neighbour(char transition, Node* node) {
+        neighbours[transition].push_back(node);
     }
 
     vector<string> tokens1() const {
         return tokens;
+    }
+
+    bool has_transition(char ch) {
+        return neighbours.contains(ch);
+    }
+
+    vector<Node*> get_neighbour(char ch) {
+        return neighbours[ch];
+    }
+
+    // Add operator< for std::set compatibility
+    bool operator<(const Node& other) const {
+        return id < other.id; // Compare based on id
     }
 };

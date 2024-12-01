@@ -1,0 +1,92 @@
+// test 1 without any eps
+
+// Create nodes
+    Node* state0 = new Node(0, true, false);  // Start state
+    Node* state1 = new Node(1);
+    Node* state2 = new Node(2);
+    Node* state3 = new Node(3, false, true); // Accepting state
+
+    // Define transitions
+    state0->add_neighbour('a', state0); // Loop on 'a'
+    state0->add_neighbour('b', state0); // Loop on 'b'
+    state0->add_neighbour('a', state1); // Transition to state1 on 'a'
+    state1->add_neighbour('b', state2); // Transition to state2 on 'b'
+    state2->add_neighbour('b', state3); // Transition to state3 on 'b'
+
+    // Build NFA
+    NFA nfa({});
+    nfa.start_node = state0;
+    nfa.end_node = state3;
+ -------------------------------------------------------------------------
+ // test 2 with eps
+
+ // Create nodes
+         Node* state0 = new Node(0, true, false);  // Start state
+         Node* state1 = new Node(1);
+         Node* state2 = new Node(2, false, true); // Accepting state
+         Node* state3 = new Node(3);
+         Node* state4 = new Node(4, false, true); // Accepting state
+
+         // Define transitions
+         state0->add_neighbour('a', state1);  // Epsilon transition to state 1 on 'a'
+         state0->add_neighbour('b', state3);  // Epsilon transition to state 3 on 'b'
+
+         state1->add_neighbour('a', state2);  // Transition from state 1 to state 2 on 'a'
+         state2->add_neighbour('a', state2);  // Loop on state 2 for 'a'
+
+         state3->add_neighbour('b', state4);  // Transition from state 3 to state 4 on 'b'
+         state4->add_neighbour('b', state4);  // Loop on state 4 for 'b'
+
+         // Build NFA
+         NFA nfa({});
+         nfa.start_node = state0;
+         nfa.end_node = state4;
+
+ --------------------------------------------------------------------------
+ // test 3 complex nfa
+
+ // Create nodes
+         Node* state0 = new Node(0, true, false);  // Start state
+         Node* state1 = new Node(1);
+         Node* state2 = new Node(2);
+         Node* state3 = new Node(3);
+         Node* state4 = new Node(4);
+         Node* state5 = new Node(5);
+         Node* state6 = new Node(6);
+         Node* state7 = new Node(7);
+         Node* state8 = new Node(8);
+         Node* state9 = new Node(9);
+         Node* state10 = new Node(10, false, true); // Accepting state
+
+         // Define transitions
+         state0->add_neighbour('$', state1);  // Epsilon transition to state 1
+         state0->add_neighbour('$', state4);  // Epsilon transition to state 4
+
+         state1->add_neighbour('$', state2);  // Epsilon transition to state 2
+         state1->add_neighbour('$', state6);  // Epsilon transition to state 6
+
+         state2->add_neighbour('a', state3);  // Transition to state 3 on 'a'
+
+         state3->add_neighbour('$', state6);  // Epsilon transition to state 6
+         state3->add_neighbour('$', state5);  // Epsilon transition to state 5
+
+         state4->add_neighbour('b', state5);  // Transition to state 5 on 'b'
+
+         state5->add_neighbour('$', state6);  // Epsilon transition to state 6
+         state5->add_neighbour('$', state1);  // Epsilon transition to state 1
+
+         state6->add_neighbour('$', state7);  // Epsilon transition to state 7
+         state6->add_neighbour('$', state1);  // Epsilon transition to state 1
+
+         state7->add_neighbour('a', state8);  // Transition to state 8 on 'a'
+
+         state8->add_neighbour('b', state9);  // Transition to state 9 on 'b'
+
+         state9->add_neighbour('b', state10);  // Transition to state 10 on 'b'
+
+         // Build NFA
+         NFA nfa({});
+         nfa.start_node = state0;
+         nfa.end_node = state10;  // The final state
+
+         return nfa;
