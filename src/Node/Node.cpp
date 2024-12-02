@@ -19,19 +19,19 @@ public:
     Node(int id, bool is_start = false, bool is_accepting = false)
         : id(id), is_start(is_start), is_accepting(is_accepting) {}
 
-    int id1() const {
+    int get_id() const {
         return id;
     }
 
-    bool is_start1() const {
+    bool get_is_start() const {
         return is_start;
     }
 
-    bool is_accepting1() const {
+    bool get_is_accepting() const {
         return is_accepting;
     }
 
-    map<char, vector<Node*>> neighbours1() const {
+    map<char, vector<Node*>> get_neighbours() const {
         return neighbours;
     }
 
@@ -39,7 +39,7 @@ public:
         neighbours[transition].push_back(node);
     }
 
-    vector<string> tokens1() const {
+    vector<string> get_tokens() const {
         return tokens;
     }
 

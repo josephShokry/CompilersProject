@@ -4,7 +4,7 @@ DFA::DFA(NFA nfa) {
     int id = 0;
     queue<set<Node*>> q;
     set<Node*> sett;
-    sett.insert(nfa.start_node1());
+    sett.insert(nfa.get_start_node());
     set<Node*> eq = nfa.get_equivilant_nodes(sett);
     sett.insert(eq.begin(), eq.end());
     q.push(sett);
@@ -84,7 +84,7 @@ void DFA::minimize() {
 
 vector<vector<int>> DFA::split(vector<int> elems, map<vector<int>, int> mapp) {
     vector<vector<int>> out;
-    vector<char> chars = {'a','b'};
+    vector<char> chars = {'a','b','c'};
     map<vector<int>, vector<int>> m;
     for (int i = 0;i<elems.size();i++) {
         vector<int> nexts(chars.size(), -1);
@@ -109,7 +109,9 @@ int DFA::int_to_vec_int(int x, map<vector<int>, int>& mapp) {
 }
 
 int DFA::get_next_node_id(int node_id, char transition_char) {
-    return transition_table[node_id][transition_char];
+    if (transition_table[node_id].contains(transition_char))
+        return transition_table[node_id][transition_char];
+    return -1;
 }
 
 set<Node*> DFA::getNextNodes(Node* current_node, char transition_char) {
@@ -130,16 +132,16 @@ int DFA::get_id_from_node(Node* node) {
 vector<vector<int>> DFA::split_ids() {
     vector<vector<int>> ids(2);
     for (const auto& [node_set, id] : state_to_id) {
-        bool acctepting = false;
+        bool accepting = false;
         for (Node* node: node_set) {
-            if (node->is_accepting1()) {
-                ids[0].push_back(id);
-                acctepting = true;
+            if (node->get_is_accepting()) {
+                ids[1].push_back(id);
+                accepting = true;
                 break;
             }
         }
-        if (!acctepting) {
-            ids[1].push_back(id);
+        if (!accepting) {
+            ids[0].push_back(id);
         }
     }
     return ids;

@@ -1,8 +1,4 @@
-//
-// Node.h
-// Created by lenovo on 11/28/2024.
-//
-
+// node.h
 #ifndef NODE_H
 #define NODE_H
 
@@ -26,23 +22,29 @@ public:
         : id(id), is_start(is_start), is_accepting(is_accepting) {}
 
     // Get the node's ID
-    int id1() const {
+    int get_id() const {
         return id;
     }
 
     // Check if this node is the start state
-    bool is_start1() const {
+    bool get_is_start() const {
         return is_start;
     }
 
     // Check if this node is an accepting state
-    bool is_accepting1() const {
+    bool get_is_accepting() const {
         return is_accepting;
     }
 
     // Get the node's transitions
-    map<char, vector<Node*>> neighbours1() const {
+    map<char, vector<Node*>> get_neighbours() const {
         return neighbours;
+    }
+
+    void concatenate_neighbours(map<char, vector<Node*>> neighbours) {
+        for (const auto& [key, vec] : neighbours) {
+            this->neighbours[key].insert(this->neighbours[key].end(), vec.begin(), vec.end());
+        }
     }
 
     // Add a neighbor node for a given transition character
@@ -64,14 +66,25 @@ public:
     }
 
     // Get the node's tokens
-    vector<string> tokens1() const {
+    vector<string> get_tokens() const {
         return tokens;
+    }
+    void set_is_start(bool is_start) {
+        this->is_start = is_start;
+    }
+    void set_is_accepting(bool is_accepting) {
+        this->is_accepting = is_accepting;
+    }
+
+    void set_id(int id) {
+        this->id = id;
     }
 
     // Operator< for use in std::set (compares nodes by their IDs)
     bool operator<(const Node& other) const {
         return id < other.id;
     }
+
 };
 
 #endif // NODE_H
