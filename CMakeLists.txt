@@ -11,4 +11,8 @@ add_executable(CompilersProject main.cpp
         src/NFA/NFA.cpp
         src/NFA/NFA.h
         src/DFA/DFA.cpp
-        src/DFA/DFA.h)
+        src/DFA/DFA.h
+        src/Utils/utils.cpp
+        src/Utils/utils.h
+        src/NFA/NFA_builder.cpp
+        src/NFA/NFA_builder.h)
