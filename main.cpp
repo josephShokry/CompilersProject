@@ -4,23 +4,6 @@
 using namespace std;
 
 #define conc_symbol "#"
-// void bfs(NFA nfa) {
-//     vector<bool>visited(1e5, false);
-//     queue<Node*>q;
-//     q.push(nfa.get_start_node());
-//     visited[nfa.get_start_node()->get_id()] = true;
-//     while (!q.empty()) {
-//         auto current = q.front();
-//         // cout<<
-//         for (auto neighbour : current->get_neighbours()) {
-//             for (auto node: neighbour.second) {
-//                 if (!visited[node->get_id()]) {
-//                     q.push(node);
-//                 }
-//             }
-//         }
-//     }
-// }
 
 void bfs_co(NFA nfa) {
     unordered_set<int> visited;
@@ -51,11 +34,11 @@ void bfs_co(NFA nfa) {
         }
     }
 }
-// TODO put token for each accepting state
+
 int main() {
     NFA_builder nfa_builder;
 
-    nfa_builder.extract_rules("C:\\Users\\alsay\\CLionProjects\\CompilersProject\\input_rules.txt");
+    nfa_builder.extract_rules("C:\\Users\\CompuFast\\Desktop\\compilers\\project\\CompilersProject\\input_rules.txt");
     nfa_builder.split_rules();
     nfa_builder.set_pre_defined_tokens();
     nfa_builder.map_regex_to_tokens();
@@ -70,13 +53,6 @@ int main() {
     nfa_builder.create_NFAs();
     NFA nfa = nfa_builder.combined_nfa();
     bfs_co(nfa);
-    for (auto [ch, nei]: nfa.get_start_node()->get_neighbours()) {
-        cout<<ch<<" ";
-        for (auto n: nei) {
-                cout<<n->get_id()<<" "<<n->get_is_accepting()<<n->get_is_start()<<" ";
-        }
-        cout<<"\n";
-    }
-    // for (auto x: pre_defined_tokens) cout << x << " ";
+
 
 }

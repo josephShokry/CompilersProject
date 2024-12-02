@@ -247,16 +247,23 @@ NFA NFA_builder::join(NFA NFA_1, NFA NFA_2) {
     return {start, end};
 }
 
+// NFA NFA_builder::concatenate(NFA NFA_1, NFA NFA_2) {
+//     // Add epsilon transition from the end node of NFA_1 to the start node of NFA_2
+//     NFA_1.get_end_node()->add_neighbour(eps_ch, NFA_2.get_start_node());
+//
+//     // Make the old start node of NFA_2 non-starting
+//     NFA_2.get_start_node()->set_is_start(false);
+//
+//     // Make the old end node of NFA_1 non-accepting
+//     NFA_1.get_end_node()->set_is_accepting(false);
+//
+//     return {NFA_1.get_start_node(), NFA_2.get_end_node()};
+// }
+
 NFA NFA_builder::concatenate(NFA NFA_1, NFA NFA_2) {
-    // Add epsilon transition from the end node of NFA_1 to the start node of NFA_2
-    NFA_1.get_end_node()->add_neighbour(eps_ch, NFA_2.get_start_node());
-
-    // Make the old start node of NFA_2 non-starting
-    NFA_2.get_start_node()->set_is_start(false);
-
-    // Make the old end node of NFA_1 non-accepting
+    NFA_1.get_end_node()->concatenate_neighbours(NFA_2.get_start_node()->get_neighbours());
     NFA_1.get_end_node()->set_is_accepting(false);
-
+    delete(NFA_2.get_start_node());
     return {NFA_1.get_start_node(), NFA_2.get_end_node()};
 }
 
@@ -352,7 +359,7 @@ NFA NFA_builder::get_NFA(const string token) {
 
     // Process each sub-token in the token vector representing the regex
     for (const string &sub_token: tokens_vec) {
-        if (operations.contains(sub_token)) {
+        if (operations.contains(sub_token) || sub_token == ")") {
             if (sub_token == "(") {
                 op.push(sub_token);
             } else if (sub_token == ")") {
@@ -376,9 +383,9 @@ NFA NFA_builder::get_NFA(const string token) {
     while (!op.empty()) {
         process_operator();
     }
-
+    token_to_NFA[token] = val.top();
     // The top of the value stack holds the final NFA
-    return val.top();
+    return token_to_NFA[token];
 }
 
 
@@ -397,6 +404,7 @@ NFA NFA_builder::combined_nfa() {
 
     for (auto &[token, nfa]: token_to_NFA) {
         start->add_neighbour(eps_ch, nfa.get_start_node());
+        nfa.get_start_node()->set_is_start(false);
         end = nfa.get_end_node();
     }
 
@@ -411,7 +419,7 @@ NFA NFA_builder::combined_nfa() {
             }
         }
     };
-
+    set_ids(start, start_id);
     return {start, end};
 }
 

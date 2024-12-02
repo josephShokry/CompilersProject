@@ -19,6 +19,8 @@ private:
     bool is_accepting; // True if this is an accepting state
     // TODO check if it causes a problem
     map<char, vector<Node*>> neighbours; // Transitions: char -> list of target nodes
+
+private:
     vector<string> tokens; // Additional information or tokens associated with the node
 
 public:
@@ -44,6 +46,12 @@ public:
     // Get the node's transitions
     map<char, vector<Node*>> get_neighbours() const {
         return neighbours;
+    }
+
+    void concatenate_neighbours(map<char, vector<Node*>> neighbours) {
+        for (const auto& [key, vec] : neighbours) {
+            this->neighbours[key].insert(this->neighbours[key].end(), vec.begin(), vec.end());
+        }
     }
 
     // Add a neighbor node for a given transition character
@@ -83,6 +91,7 @@ public:
     bool operator<(const Node& other) const {
         return id < other.id;
     }
+
 };
 
 #endif // NODE_H
