@@ -59,6 +59,6 @@ int main() {
 
     dfa.print_transition_table();
     cout<<"###########3"<<endl;
-    dfa.minimize();
-    dfa.print_transition_table();
+    // dfa.minimize();
+    // dfa.print_transition_table();
 }
