@@ -52,7 +52,7 @@ int main() {
     }
     nfa_builder.create_NFAs();
     NFA nfa = nfa_builder.combined_nfa();
-    bfs_co(nfa);
+    bfs_co(nfa, nfa_builder.get_priority());
 
 
 }
