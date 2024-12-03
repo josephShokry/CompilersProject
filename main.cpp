@@ -39,7 +39,7 @@ void bfs_co(NFA nfa, map<string, int> priority) {
 int main() {
     NFA_builder nfa_builder;
 
-    nfa_builder.extract_rules("../input_rules.txt");
+    nfa_builder.extract_rules("../original.txt");
     nfa_builder.split_rules();
     nfa_builder.set_pre_defined_tokens();
     nfa_builder.map_regex_to_tokens();
@@ -55,10 +55,11 @@ int main() {
     NFA nfa = nfa_builder.combined_nfa();
     bfs_co(nfa, nfa_builder.get_priority());
 
-    DFA dfa(nfa);
+    DFA dfa(nfa, nfa_builder);
 
     dfa.print_transition_table();
-    cout<<"###########3"<<endl;
-    // dfa.minimize();
-    // dfa.print_transition_table();
+    cout<<"##################################################"<<endl;
+    cout<<"##################################################"<<endl;
+    dfa.minimize();
+    dfa.print_transition_table();
 }

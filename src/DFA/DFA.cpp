@@ -1,10 +1,12 @@
 #include "../DFA/DFA.h"
 #include "../Node/Node.h"
+#include "../NFA/NFA_builder.h"
 #include <bits/stdc++.h>
 
 using namespace std;
-DFA::DFA(NFA nfa) {
+DFA::DFA(NFA nfa, NFA_builder nfa_builder) {
     int id = 0;
+    chars = nfa.get_transition_chars(nfa_builder);
     queue<set<Node*>> q;
     set<Node*> sett;
     sett.insert(nfa.get_start_node());
@@ -17,7 +19,7 @@ DFA::DFA(NFA nfa) {
         set<Node*> cur = q.front();
         int cur_id = state_to_id[cur];
         q.pop();
-        for (char ch : nfa.get_transition_chars(cur)) {
+        for (char& ch : nfa.get_transition_chars(nfa_builder)) {
             set<Node*> nei = nfa.get_next_nodes(cur, ch);
             set<Node*> eq = nfa.get_equivilant_nodes(nei);
             nei.insert(eq.begin(), eq.end());
@@ -48,12 +50,9 @@ void DFA::minimize() {
     for (int i = 0;i<sets.size();i++) {
         vector<vector<int>> out = split(sets[i], mapp);
         if (out.size() == 1)continue;
-        // mapp.erase(sets[i]);
         sets[i] = out[0];
-        // mapp[sets[i]] = i;
         for (int j = 1;j<out.size();j++) {
             sets.push_back(out[j]);
-        //     mapp[out[j]] = sets.size() - 1;
         }
 
         update_mapp(mapp, sets);
@@ -83,11 +82,23 @@ void DFA::minimize() {
     }
     transition_table = new_transition_table;
     // for memory optimization do the same for other attributes
+    for (auto& it : new_transition_table) {
+        set<Node*> nodes = get_Nodes_from_id(it.first);
+        bool found = false;
+        for (auto& node: nodes) {
+            if (node->get_is_start()) {
+                starting_id = it.first;
+                found = true;
+                break;
+            }
+        }
+        if (found) break;
+    }
 }
 
 vector<vector<int>> DFA::split(vector<int> elems, map<vector<int>, int> mapp) {
     vector<vector<int>> out;
-    vector<char> chars = {'a','b','c'};
+    // vector<char> chars = {'a','b','c'};
     map<vector<int>, vector<int>> m;
     for (int i = 0;i<elems.size();i++) {
         vector<int> nexts(chars.size(), -1);
@@ -130,6 +141,10 @@ int DFA::get_id_from_node(Node* node) {
         }
     }
     return -1;
+}
+
+set<Node*> DFA::get_Nodes_from_id(int id) {
+    return id_to_state[id];
 }
 
 vector<vector<int>> DFA::split_ids() {

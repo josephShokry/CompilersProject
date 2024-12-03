@@ -1,0 +1,20 @@
+# ninja log v6
+10	3701	7550331513589219	CMakeFiles/CompilersProject.dir/src/Node/Node.cpp.obj	756827cebd6356b
+21	3716	7550331513694174	CMakeFiles/CompilersProject.dir/src/Utils/utils.cpp.obj	d879c0031052792e
+7	3843	7550331513555401	CMakeFiles/CompilersProject.dir/src/LexicalAnalyser/LexicalAnalyser.cpp.obj	cfafc57934386ddf
+14	4395	7550331513629228	CMakeFiles/CompilersProject.dir/src/NFA/NFA.cpp.obj	6959f61b31af93bc
+3	4647	7550331513515429	CMakeFiles/CompilersProject.dir/main.cpp.obj	36bc93271f335172
+18	5568	7550331513663947	CMakeFiles/CompilersProject.dir/src/DFA/DFA.cpp.obj	e5aefe34ce5b8495
+3707	9933	7550331550558894	CMakeFiles/CompilersProject.dir/src/NFA/NFA_builder.cpp.obj	6fd5ed5963fece26
+9946	15204	7550331612940298	CompilersProject.exe	428c7a5618ccf340
+6	2887	7550331879148436	CMakeFiles/CompilersProject.dir/main.cpp.obj	36bc93271f335172
+2888	7983	7550331907964446	CompilersProject.exe	428c7a5618ccf340
+7	2974	7550332745135233	CMakeFiles/CompilersProject.dir/main.cpp.obj	36bc93271f335172
+2975	8079	7550332774814823	CompilersProject.exe	428c7a5618ccf340
+10	2896	7550335276701818	CMakeFiles/CompilersProject.dir/src/LexicalAnalyser/LexicalAnalyser.cpp.obj	cfafc57934386ddf
+6	3642	7550335276661722	CMakeFiles/CompilersProject.dir/main.cpp.obj	36bc93271f335172
+14	4376	7550335276741796	CMakeFiles/CompilersProject.dir/src/DFA/DFA.cpp.obj	e5aefe34ce5b8495
+4376	9506	7550335320367723	CompilersProject.exe	428c7a5618ccf340
+7	3352	7550337285095624	CMakeFiles/CompilersProject.dir/main.cpp.obj	36bc93271f335172
+10	4116	7550337285135576	CMakeFiles/CompilersProject.dir/src/DFA/DFA.cpp.obj	e5aefe34ce5b8495
+4116	9387	7550337326180710	CompilersProject.exe	428c7a5618ccf340

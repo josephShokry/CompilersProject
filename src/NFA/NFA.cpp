@@ -3,6 +3,8 @@
 
 #include <vector>
 #include <bits/stdc++.h>
+
+#include "NFA_builder.h"
 #include "../Node/Node.h"
 
 using namespace std;
@@ -19,10 +21,22 @@ set<Node *> NFA::get_equivilant_nodes(set<Node *> current_nodes) {
 
     return next;
 }
-set<char> NFA::get_transition_chars(set<Node *> nodes) {
-    //TODO: implement this, this is mocked
-    set<char> sett = {'a','b','c'};
-    return sett;
+
+vector<char> NFA::get_transition_chars(NFA_builder nfa_builder) {
+    map<string, vector<string> > token_to_regex_split = nfa_builder.get_token_to_regex_split();
+    unordered_set<string> operations = {"(", "|", ")", "*", "+", "#", "$"};
+    set<char> transition_characters;
+    for (auto &[token, v] : token_to_regex_split) {
+        for (auto &x : v) {
+            if (x.size() == 1 && !operations.contains(x)) {
+                transition_characters.insert(x[0]);
+            }else if (x.size() == 2 && x[0] == '\\') {
+                transition_characters.insert(x[1]);
+            }
+        }
+    }
+    vector<char> transition_vector(transition_characters.begin(), transition_characters.end());
+    return transition_vector;
 }
 
 set<Node *> NFA::get_next_nodes(set<Node *> current_nodes, char transition) {
