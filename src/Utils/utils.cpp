@@ -9,7 +9,7 @@ using namespace std;
 string utils::resolve_range(string regex) {
     string after_resolving;
     for (int i = 0; i < regex.size(); i++) {
-        if (regex[i] == '-' && regex[i - 1] != '\\' && i != 0 && i != regex.size() - 1) {
+        if (regex[i] == '-' && regex[i - 1] != '\\' && isalnum(regex[i-1]) && isalnum(regex[i+1]) && i != 0 && i != regex.size() - 1) {
             after_resolving.pop_back();
             for (char j = regex[i - 1]; j <= regex[i + 1]; j++) {
                 after_resolving += j + string(1, '|');

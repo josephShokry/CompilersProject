@@ -33,7 +33,7 @@ private:
 
     vector<string> tokenize_rule(const string input);
 
-    NFA get_NFA(string token);
+    NFA get_NFA(const string &token);
 
     NFA create_single_char_NFA(string ch);
 
@@ -68,6 +68,13 @@ public:
     NFA combined_nfa();
 
     map<string, vector<string> > get_token_to_regex_split();
+
+    map<string, int> get_priority();
+
+    NFA deep_copy_nfa(NFA original);
+
+    Node *deep_copy_node(Node *original, unordered_map<Node *, Node *> &copied_nodes);
+
 };
 
 

@@ -18,6 +18,30 @@
  *  5. Create the NFAs for each token : create_NFAs()
  *  6. Combine the NFAs into a single NFA : combined_nfa()
  */
+Node *NFA_builder::deep_copy_node(Node *original, unordered_map<Node *, Node *> &copied_nodes) {
+    if (copied_nodes.contains(original)) {
+        return copied_nodes[original];
+    }
+
+    Node *copy = new Node(original->get_id(), original->get_is_start(), original->get_is_accepting());
+    copied_nodes[original] = copy;
+
+    for (auto &[ch, neighbours]: original->get_neighbours()) {
+        for (Node *neighbour: neighbours) {
+            copy->add_neighbour(ch, deep_copy_node(neighbour, copied_nodes));
+        }
+    }
+
+    return copy;
+}
+
+// Method to deep copy an NFA
+NFA NFA_builder::deep_copy_nfa(NFA original) {
+    unordered_map<Node *, Node *> copied_nodes;
+    Node *new_start = deep_copy_node(original.get_start_node(), copied_nodes);
+    Node *new_end = copied_nodes[original.get_end_node()];
+    return {new_start, new_end};
+}
 
 void NFA_builder::delete_character_from_string(string &rule, const char letter) {
     erase(rule, letter);
@@ -293,7 +317,7 @@ NFA NFA_builder::kleene_plus(NFA NFA_1) {
  *  Recursive function to build the NFA for a given sub token.
  *  @Param token: The sub token i.e (unit in token split vector) to build the NFA for.
  */
-NFA NFA_builder::get_NFA(const string token) {
+NFA NFA_builder::get_NFA(const string &token) {
     // Token splitting and operator definitions
 
     // Check if token has already been processed
@@ -311,7 +335,7 @@ NFA NFA_builder::get_NFA(const string token) {
     if (token_to_regex_split.contains(token) && token_to_regex_split[token].size() == 1 && (
             token == token_to_regex_split[token].back())) {
         token_to_NFA[token] = create_single_char_NFA(token);
-        return token_to_NFA[token];
+        return deep_copy_nfa(token_to_NFA[token]);
     }
 
     // Handle keywords preceded by "\"
@@ -390,7 +414,8 @@ NFA NFA_builder::get_NFA(const string token) {
 
 void NFA_builder::create_NFAs() {
     for (auto &[token, _]: token_to_regex_split) {
-        NFA nfa = get_NFA(token);
+        get_NFA(token);
+        NFA nfa = token_to_NFA[token];
         nfa.get_end_node()->add_token(token);
     }
 }
@@ -424,4 +449,8 @@ NFA NFA_builder::combined_nfa() {
 
 map<string, vector<string> > NFA_builder::get_token_to_regex_split() {
     return token_to_regex_split;
+}
+
+map<string, int> NFA_builder::get_priority() {
+    return token_to_priority;
 }
