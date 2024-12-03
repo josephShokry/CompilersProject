@@ -1,5 +1,8 @@
-#include "dfa.h"
+#include "../DFA/DFA.h"
+#include "../Node/Node.h"
+#include <bits/stdc++.h>
 
+using namespace std;
 DFA::DFA(NFA nfa) {
     int id = 0;
     queue<set<Node*>> q;
@@ -164,5 +167,24 @@ void DFA::print_transition_table() {
             cout << "  On input '" << input_char << "' -> State " << next_state << endl;
         }
     }
+}
+
+int DFA::getStartingStateId() {
+    return starting_id;
+
+}
+int DFA::getNextNodeId(int node_id, char transition_char) {
+    if (transition_table[node_id].find(transition_char) == transition_table[node_id].end()) return -1;
+    set<Node*> next_nodes = id_to_state[transition_table[node_id][transition_char]];
+    return state_to_id[next_nodes];
+}
+bool DFA::isAcceptingState(int node_id) {
+    set<Node*> nodes = id_to_state[node_id];
+    for (auto node : nodes) {
+        if (node->get_is_accepting()) {
+            return true;
+        }
+    }
+    return false;
 }
 

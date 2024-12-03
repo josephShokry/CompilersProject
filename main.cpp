@@ -1,5 +1,5 @@
 #include "bits/stdc++.h"
-#include "src/DFA/dfa.h"
+#include "src/DFA/DFA.h"
 #include "src/Utils/utils.h"
 #include "src/NFA/NFA_builder.h"
 using namespace std;

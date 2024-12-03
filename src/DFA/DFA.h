@@ -35,6 +35,10 @@ public:
     Node* get_start_node() {
         return *id_to_state[starting_id].begin();
     }
+    int getNextNodeId(int node_id, char transition_char);
+    int getStartingStateId();
+    bool isAcceptingState(int node_id);
+
 };
 
 
