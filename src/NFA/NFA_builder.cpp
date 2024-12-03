@@ -18,6 +18,30 @@
  *  5. Create the NFAs for each token : create_NFAs()
  *  6. Combine the NFAs into a single NFA : combined_nfa()
  */
+Node *NFA_builder::deep_copy_node(Node *original, unordered_map<Node *, Node *> &copied_nodes) {
+    if (copied_nodes.contains(original)) {
+        return copied_nodes[original];
+    }
+
+    Node *copy = new Node(original->get_id(), original->get_is_start(), original->get_is_accepting());
+    copied_nodes[original] = copy;
+
+    for (auto &[ch, neighbours]: original->get_neighbours()) {
+        for (Node *neighbour: neighbours) {
+            copy->add_neighbour(ch, deep_copy_node(neighbour, copied_nodes));
+        }
+    }
+
+    return copy;
+}
+
+// Method to deep copy an NFA
+NFA NFA_builder::deep_copy_nfa(NFA original) {
+    unordered_map<Node *, Node *> copied_nodes;
+    Node *new_start = deep_copy_node(original.get_start_node(), copied_nodes);
+    Node *new_end = copied_nodes[original.get_end_node()];
+    return {new_start, new_end};
+}
 
 void NFA_builder::delete_character_from_string(string &rule, const char letter) {
     erase(rule, letter);
@@ -79,7 +103,7 @@ void NFA_builder::split_keywords_and_punctuation(string rule, int priority) {
     bool keyword = rule[0] == '{';
     rule.erase(0, 1);
     rule.pop_back();
-    delete_character_from_string(rule, '\\');
+    // delete_character_from_string(rule, '\\');
     int i = 0;
     while (isspace(rule[i])) {
         i++;
@@ -88,6 +112,9 @@ void NFA_builder::split_keywords_and_punctuation(string rule, int priority) {
     for (; i < rule.size(); i++) {
         if (isspace(rule[i])) {
             if (!token.empty()) {
+                if (token[0] == '\\') {
+                    token = token.substr(1);
+                }
                 token_to_priority[token] = priority;
                 vector<string> after_splitting = split_to_characters(token);
                 if (keyword) {
@@ -101,7 +128,11 @@ void NFA_builder::split_keywords_and_punctuation(string rule, int priority) {
             token += rule[i];
         }
     }
+
     if (!token.empty()) {
+        if (token[0] == '\\') {
+            token = token.substr(1);
+        }
         token_to_priority[token] = priority;
         vector<string> after_splitting = split_to_characters(token);
         if (keyword) {
@@ -116,7 +147,7 @@ void NFA_builder::split_regular_definitions_and_expressions(string rule, int pri
     string token, rule_without_spaces = utils::remove_spaces_from_regex(rule);
     rule_without_spaces = std::regex_replace(rule_without_spaces, std::regex("\\L"), eps_str);
     string rule_after_resolving_ranges = utils::resolve_range(rule_without_spaces);
-    delete_character_from_string(rule_after_resolving_ranges, '\\');
+    // delete_character_from_string(rule_after_resolving_ranges, '\\');
 
     int value_start_index = 0;
     for (int i = 0; i < rule_after_resolving_ranges.size(); i++) {
@@ -141,27 +172,6 @@ void NFA_builder::split_rules() {
     }
 }
 
-
-// // Method to split tokens and regex
-// void NFA_builder::split_token_regex() {
-// }
-//
-// // Method to split reserved keywords or punctuation
-// void NFA_builder::split_reserved_or_punc() {
-// }
-//
-// // Method to split regular definitions
-// void NFA_builder::split_reg_def() {
-// }
-//
-// // Method to construct individual token NFAs
-// void NFA_builder::make_token_nfa() {
-// }
-
-// Method to combine individual NFAs into a single NFA
-// NFA NFA_builder::combined_nfa() {
-//     return NFA(); // Return a default NFA object (replace with logic if needed)
-// }
 void NFA_builder::set_pre_defined_tokens() {
     for (auto [token, vec]: token_to_regex_split) {
         pre_defined_tokens.insert(token);
@@ -180,6 +190,13 @@ vector<string> NFA_builder::tokenize_rule(const string input) {
     while (start < input.size()) {
         string longestMatch;
         size_t end = start;
+
+        // Check for escaped characters
+        if (input[start] == '\\' && start + 1 < input.size()) {
+            tokens.push_back(input.substr(start, 2)); // Add the escaped character as a token
+            start += 2; // Move past the escaped character
+            continue;
+        }
 
         // Find the longest matching predefined token
         while (end < input.size()) {
@@ -247,19 +264,6 @@ NFA NFA_builder::join(NFA NFA_1, NFA NFA_2) {
     return {start, end};
 }
 
-// NFA NFA_builder::concatenate(NFA NFA_1, NFA NFA_2) {
-//     // Add epsilon transition from the end node of NFA_1 to the start node of NFA_2
-//     NFA_1.get_end_node()->add_neighbour(eps_ch, NFA_2.get_start_node());
-//
-//     // Make the old start node of NFA_2 non-starting
-//     NFA_2.get_start_node()->set_is_start(false);
-//
-//     // Make the old end node of NFA_1 non-accepting
-//     NFA_1.get_end_node()->set_is_accepting(false);
-//
-//     return {NFA_1.get_start_node(), NFA_2.get_end_node()};
-// }
-
 NFA NFA_builder::concatenate(NFA NFA_1, NFA NFA_2) {
     NFA_1.get_end_node()->concatenate_neighbours(NFA_2.get_start_node()->get_neighbours());
     NFA_1.get_end_node()->set_is_accepting(false);
@@ -309,18 +313,35 @@ NFA NFA_builder::kleene_plus(NFA NFA_1) {
 }
 
 
-NFA NFA_builder::get_NFA(const string token) {
+/*
+ *  Recursive function to build the NFA for a given sub token.
+ *  @Param token: The sub token i.e (unit in token split vector) to build the NFA for.
+ */
+NFA NFA_builder::get_NFA(const string &token) {
+    // Token splitting and operator definitions
+
     // Check if token has already been processed
     if (token_to_NFA.contains(token)) {
-        return token_to_NFA[token];
+        // return token_to_NFA[token];
+        return deep_copy_nfa(token_to_NFA[token]);
     }
 
-    // Base case: handle single-character tokens
-    if (token.size() == 1) {
+    // Base case: handle single-character sub tokens
+    if (token.size() == 1 && !token_to_regex_split.contains(token)) {
         return create_single_char_NFA(token);
     }
 
-    // Token splitting and operator definitions
+    // Special case for []
+    if (token_to_regex_split.contains(token) && token_to_regex_split[token].size() == 1 && (
+            token == token_to_regex_split[token].back())) {
+        token_to_NFA[token] = create_single_char_NFA(token);
+        return deep_copy_nfa(token_to_NFA[token]);
+    }
+
+    // Handle keywords preceded by "\"
+    if (token.size() == 2 && token[0] == '\\') {
+        return create_single_char_NFA(token.substr(1));
+    }
     const vector<string> &tokens_vec = token_to_regex_split[token];
     const unordered_map<string, int> operations = {
         {"*", 0}, {"+", 1}, {conc_symbol, 2}, {"|", 3}, {"(", 4}
@@ -383,15 +404,18 @@ NFA NFA_builder::get_NFA(const string token) {
     while (!op.empty()) {
         process_operator();
     }
-    token_to_NFA[token] = val.top();
-    // The top of the value stack holds the final NFA
-    return token_to_NFA[token];
+
+    if (!token_to_NFA.contains(token)) {
+        token_to_NFA[token] = val.top();
+    }
+    return deep_copy_nfa(token_to_NFA[token]);
 }
 
 
 void NFA_builder::create_NFAs() {
     for (auto &[token, _]: token_to_regex_split) {
-        NFA nfa = get_NFA(token);
+        get_NFA(token);
+        NFA nfa = token_to_NFA[token];
         nfa.get_end_node()->add_token(token);
     }
 }
@@ -408,7 +432,7 @@ NFA NFA_builder::combined_nfa() {
         end = nfa.get_end_node();
     }
 
-    auto set_ids = std::function<void(Node*, int&)>{};
+    auto set_ids = std::function<void(Node *, int &)>{};
     set_ids = [&](Node *node, int &id) {
         node->set_id(id++);
         for (auto &[_, neighbours]: node->get_neighbours()) {
@@ -423,6 +447,10 @@ NFA NFA_builder::combined_nfa() {
     return {start, end};
 }
 
-map<string, vector<string>> NFA_builder::get_token_to_regex_split() {
+map<string, vector<string> > NFA_builder::get_token_to_regex_split() {
     return token_to_regex_split;
+}
+
+map<string, int> NFA_builder::get_priority() {
+    return token_to_priority;
 }

@@ -6,7 +6,7 @@ using namespace std;
 
 #define conc_symbol "#"
 
-void bfs_co(NFA nfa) {
+void bfs_co(NFA nfa, map<string, int> priority) {
     unordered_set<int> visited;
     queue<Node*> q;
     q.push(nfa.get_start_node());
@@ -20,7 +20,7 @@ void bfs_co(NFA nfa) {
             cout << " (Start)";
         }
         if (current->get_is_accepting()) {
-            cout << " (Accepting)";
+            cout << " (Accepting) "<<priority[current->get_tokens()[0]]<<" "<<current->get_tokens()[0];
         }
         cout << endl;
 
@@ -53,7 +53,7 @@ int main() {
     }
     nfa_builder.create_NFAs();
     NFA nfa = nfa_builder.combined_nfa();
-    bfs_co(nfa);
+    bfs_co(nfa, nfa_builder.get_priority());
 
     DFA dfa(nfa);
 

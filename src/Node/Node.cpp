@@ -14,13 +14,37 @@ private:
     bool is_accepting;
     map<char, vector<Node*>> neighbours;
     vector<string> tokens;
-
 public:
     Node(int id, bool is_start = false, bool is_accepting = false)
-        : id(id), is_start(is_start), is_accepting(is_accepting) {}
+        : id(id), is_start(is_start), is_accepting(is_accepting) {
+    }
 
     int get_id() const {
         return id;
+    }
+
+    void set_id(int id) {
+        this->id = id;
+    }
+
+    void set_is_start(bool is_start) {
+        this->is_start = is_start;
+    }
+
+    void set_is_accepting(bool is_accepting) {
+        this->is_accepting = is_accepting;
+    }
+
+    void set_neighbours(const map<char, vector<Node *> > &neighbours) {
+        this->neighbours = neighbours;
+    }
+
+    void set_tokens(const vector<string> &tokens) {
+        this->tokens = tokens;
+    }
+
+    void add_token(const string token) {
+        tokens.push_back(token);
     }
 
     bool get_is_start() const {
