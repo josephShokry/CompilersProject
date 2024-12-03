@@ -1,3 +1,0 @@
-/home/karim/CompilersProject/cmake-build-debug/CMakeFiles/CompilersProject.dir
-/home/karim/CompilersProject/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/karim/CompilersProject/cmake-build-debug/CMakeFiles/rebuild_cache.dir
