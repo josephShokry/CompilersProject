@@ -1,1 +1,1 @@
-letter: a|b|c
+letter: aa|b|c*

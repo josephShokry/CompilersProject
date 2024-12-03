@@ -13,13 +13,15 @@ using namespace std;
 
 class DFA {
 private:
-    int starting_id = 0;
+    int starting_id;
     map<int,set<Node*>> id_to_state;
     map<set<Node*>, int> state_to_id;
     map<int,map<char,int>> transition_table;
-    vector<char> chars = {'a','b','c'};
 
     int get_id_from_node(Node* node);
+
+    set<Node *> get_Nodes_from_id(int id);
+
     vector<vector<int>> split_ids();
     vector<vector<int>> split(vector<int> elems, map<vector<int>, int>);
     int int_to_vec_int(int x, map<vector<int>, int> &mapp);
@@ -28,7 +30,7 @@ private:
     set<Node*> getNextNodes(Node* current_node, char transition_char);
 
 public:
-    DFA(NFA nfa);
+    DFA(NFA nfa, NFA_builder nfa_builder);
     void minimize();
     void print_transition_table();
 

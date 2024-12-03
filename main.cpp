@@ -55,7 +55,7 @@ int main() {
     NFA nfa = nfa_builder.combined_nfa();
     bfs_co(nfa);
 
-    DFA dfa(nfa);
+    DFA dfa(nfa, nfa_builder);
 
     dfa.print_transition_table();
     cout<<"###########3"<<endl;

@@ -8,6 +8,7 @@
 #include <bits/stdc++.h>
 #include "../Node/Node.h"
 
+class NFA_builder;
 using namespace std;
 
 class NFA {
@@ -28,7 +29,7 @@ public:
     // return the set of node that has eps transitions
     set<Node *> get_equivilant_nodes(set<Node *> current_nodes);
 
-    set<char> get_transition_chars(set<Node *> nodes);
+    vector<char> get_transition_chars(NFA_builder nfa_builder);
 
     static NFA construct_example_nfa();
 

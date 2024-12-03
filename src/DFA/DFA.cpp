@@ -1,6 +1,7 @@
 #include "dfa.h"
+#include "../NFA/NFA_builder.h"
 
-DFA::DFA(NFA nfa) {
+DFA::DFA(NFA nfa, NFA_builder nfa_builder) {
     int id = 0;
     queue<set<Node*>> q;
     set<Node*> sett;
@@ -14,7 +15,7 @@ DFA::DFA(NFA nfa) {
         set<Node*> cur = q.front();
         int cur_id = state_to_id[cur];
         q.pop();
-        for (char ch : nfa.get_transition_chars(cur)) {
+        for (char ch : nfa.get_transition_chars(nfa_builder)) {
             set<Node*> nei = nfa.get_next_nodes(cur, ch);
             set<Node*> eq = nfa.get_equivilant_nodes(nei);
             nei.insert(eq.begin(), eq.end());
@@ -127,6 +128,10 @@ int DFA::get_id_from_node(Node* node) {
         }
     }
     return -1;
+}
+
+set<Node*> DFA::get_Nodes_from_id(int id) {
+    return id_to_state[id];
 }
 
 vector<vector<int>> DFA::split_ids() {
