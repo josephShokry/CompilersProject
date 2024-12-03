@@ -38,7 +38,7 @@ void bfs_co(NFA nfa) {
 int main() {
     NFA_builder nfa_builder;
 
-    nfa_builder.extract_rules("C:\\Users\\CompuFast\\Desktop\\compilers\\project\\CompilersProject\\input_rules.txt");
+    nfa_builder.extract_rules("C:\\Users\\alsay\\CLionProjects\\CompilersProject\\input_rules.txt");
     nfa_builder.split_rules();
     nfa_builder.set_pre_defined_tokens();
     nfa_builder.map_regex_to_tokens();

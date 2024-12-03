@@ -12,36 +12,71 @@ private:
     int id;
     bool is_start;
     bool is_accepting;
-    map<char, Node> neighbours;
-    // add them sorted depending on the priority
+    map<char, vector<Node *> > neighbours;
     vector<string> tokens;
+
 public:
-    Node(int id, bool is_start, bool is_accepting,
-        const map<char, Node> &neighbours, const vector<string> &tokens)
-        : id(id),
-          is_start(is_start),
-          is_accepting(is_accepting),
-          neighbours(neighbours),
-          tokens(tokens) {
+    Node(int id, bool is_start = false, bool is_accepting = false)
+        : id(id), is_start(is_start), is_accepting(is_accepting) {
     }
 
-    int id1() const {
+    int get_id() const {
         return id;
     }
 
-    bool is_start1() const {
+    void set_id(int id) {
+        this->id = id;
+    }
+
+    void set_is_start(bool is_start) {
+        this->is_start = is_start;
+    }
+
+    void set_is_accepting(bool is_accepting) {
+        this->is_accepting = is_accepting;
+    }
+
+    void set_neighbours(const map<char, vector<Node *> > &neighbours) {
+        this->neighbours = neighbours;
+    }
+
+    void set_tokens(const vector<string> &tokens) {
+        this->tokens = tokens;
+    }
+
+    void add_token(const string token) {
+        tokens.push_back(token);
+    }
+
+    bool get_is_start() const {
         return is_start;
     }
 
-    bool is_accepting1() const {
+    bool get_is_accepting() const {
         return is_accepting;
     }
 
-    map<char, Node> neighbours1() const {
+    map<char, vector<Node *> > get_neighbours() const {
         return neighbours;
     }
 
-    vector<string> tokens1() const {
+    void add_neighbour(char transition, Node *node) {
+        neighbours[transition].push_back(node);
+    }
+
+    vector<string> get_tokens() const {
         return tokens;
+    }
+
+    bool has_transition(char ch) {
+        return neighbours.contains(ch);
+    }
+
+    vector<Node *> get_neighbour(char ch) {
+        return neighbours[ch];
+    }
+
+    bool operator<(const Node &other) const {
+        return id < other.id; // Compare based on id
     }
 };

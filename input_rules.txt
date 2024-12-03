@@ -1,1 +1,2 @@
-letter: a|b|c
+[=]
+relop: \=\=

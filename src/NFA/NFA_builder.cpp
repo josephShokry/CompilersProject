@@ -141,27 +141,6 @@ void NFA_builder::split_rules() {
     }
 }
 
-
-// // Method to split tokens and regex
-// void NFA_builder::split_token_regex() {
-// }
-//
-// // Method to split reserved keywords or punctuation
-// void NFA_builder::split_reserved_or_punc() {
-// }
-//
-// // Method to split regular definitions
-// void NFA_builder::split_reg_def() {
-// }
-//
-// // Method to construct individual token NFAs
-// void NFA_builder::make_token_nfa() {
-// }
-
-// Method to combine individual NFAs into a single NFA
-// NFA NFA_builder::combined_nfa() {
-//     return NFA(); // Return a default NFA object (replace with logic if needed)
-// }
 void NFA_builder::set_pre_defined_tokens() {
     for (auto [token, vec]: token_to_regex_split) {
         pre_defined_tokens.insert(token);
@@ -308,19 +287,30 @@ NFA NFA_builder::kleene_plus(NFA NFA_1) {
     return {start, end};
 }
 
-
+// l = letter
+/*
+ *  Recursive function to build the NFA for a given sub token.
+ *  @Param token: The sub token i.e (unit in token split vector) to build the NFA for.
+ */
 NFA NFA_builder::get_NFA(const string token) {
+    // Token splitting and operator definitions
+
     // Check if token has already been processed
     if (token_to_NFA.contains(token)) {
+        // TODO: deep copy for th NFA
         return token_to_NFA[token];
     }
 
-    // Base case: handle single-character tokens
-    if (token.size() == 1) {
-        return create_single_char_NFA(token);
+    // Base case: handle single-character sub tokens
+    if (token.size() == 1 && !token_to_regex_split.contains(token)) {
+        return  create_single_char_NFA(token);
     }
 
-    // Token splitting and operator definitions
+    // Special case for []
+    if (token_to_regex_split.contains(token) && token_to_regex_split[token].size() == 1 && (token == token_to_regex_split[token].back()) ) {
+        token_to_NFA[token] = create_single_char_NFA(token);
+        return token_to_NFA[token];
+    }
     const vector<string> &tokens_vec = token_to_regex_split[token];
     const unordered_map<string, int> operations = {
         {"*", 0}, {"+", 1}, {conc_symbol, 2}, {"|", 3}, {"(", 4}
