@@ -240,7 +240,7 @@ void DFA::print_transition_table() {
         int state_id = state_entry.first;
         const map<char, int>& transitions = state_entry.second;
 
-        bool accepting = isAcceptingState(starting_id);
+        bool accepting = isAcceptingState(state_id);
         cout << "State " << state_id << " transitions "<< (accepting?"(Accepting)":"(Not Accepting)")<< " :" << endl;
 
         // Iterate over each character transition for the state
@@ -250,10 +250,6 @@ void DFA::print_transition_table() {
             cout << "  On input '" << input_char << "' -> State " << next_state << endl;
         }
     }
-}
-
-int DFA::getStartingStateId() {
-    return starting_id;
 }
 
 int DFA::get_starting_state_id() {
@@ -267,7 +263,7 @@ int DFA::getNextNodeId(int node_id, char transition_char) {
 }
 
 bool DFA::isAcceptingState(int node_id) {
-    set<Node*> nodes = id_to_state[node_id];
+    set<Node*> nodes = get_Nodes_from_id(node_id);
     for (auto node : nodes) {
         if (node->get_is_accepting()) {
             return true;

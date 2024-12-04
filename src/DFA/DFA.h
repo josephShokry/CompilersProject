@@ -13,7 +13,7 @@ using namespace std;
 
 class DFA {
 private:
-    int starting_id;
+    int starting_id = 0;
     vector<char> chars;
     map<int,set<Node*>> id_to_state;
     map<set<Node*>, int> state_to_id;
@@ -40,7 +40,6 @@ public:
     }
     int get_starting_state_id();
     int getNextNodeId(int node_id, char transition_char);
-    int getStartingStateId();
     bool isAcceptingState(int node_id);
 
 };

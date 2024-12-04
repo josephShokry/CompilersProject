@@ -2,6 +2,7 @@
 #include "src/DFA/DFA.h"
 #include "src/Utils/utils.h"
 #include "src/NFA/NFA_builder.h"
+#include "src/LexicalAnalyser/LexicalAnalyser.h"
 using namespace std;
 
 #define conc_symbol "#"
@@ -64,4 +65,7 @@ int main() {
     dfa.minimize();
     dfa.print_transition_table();
     cout<<"starting state id is "<<dfa.get_starting_state_id()<<endl;
+
+    lexical_analyser analyser(dfa,"../testFiles/code.txt");
+    analyser.get_all_tokens();
 }
