@@ -37,70 +37,27 @@ DFA::DFA(NFA nfa, NFA_builder nfa_builder) {
     }
 }
 
-void DFA::update_mapp(map<vector<int>, int>& mapp, vector<vector<int>>& partitionedStates) {
+set<Node *> DFA::getNewState(vector<int> partitionedStates) {
+    set<Node*> sett;
+    for (int i:partitionedStates) {
+        set<Node*> old = id_to_state[i];
+        sett.insert(old.begin(), old.end());
+    }
+    return sett;
+}
+
+void DFA::update_mapp(map<vector<int>, int>& stateGroupMapping, vector<vector<int>>& partitionedStates) {
     // Remove empty partitions
     partitionedStates.erase(
         remove_if(partitionedStates.begin(), partitionedStates.end(),
                   [](const vector<int>& state) { return state.empty(); }),
         partitionedStates.end()
     );
-    mapp.clear();
+    stateGroupMapping.clear();
     for (int i=0;i<partitionedStates.size();i++) {
-        mapp[partitionedStates[i]] = i;
+        stateGroupMapping[partitionedStates[i]] = i;
     }
 }
-// void DFA::minimize() {
-//     vector<vector<int>> sets = split_ids();
-//     map<vector<int>, int> mapp;
-//     update_mapp(mapp, sets);
-//     for (int i = 0;i<sets.size();i++) {
-//         vector<vector<int>> out = split(sets[i], mapp);
-//         if (out.size() == 1)continue;
-//         sets[i] = out[0];
-//         for (int j = 1;j<out.size();j++) {
-//             sets.push_back(out[j]);
-//         }
-//
-//         update_mapp(mapp, sets);
-//         i = -1;
-//     }
-//     // update the attributes of DFA
-//     map<int, map<char, int>> vis;
-//     for (int i= 0;i<sets.size();i++) {
-//         vector<int> v = sets[i];
-//         for (auto& state_entry : transition_table) {
-//             for (auto& map_entry: state_entry.second) {
-//                 if (find(v.begin(), v.end(), map_entry.second) != v.end() && !vis[state_entry.first][map_entry.first]) {
-//                     map_entry.second = i;
-//                     vis[state_entry.first][map_entry.first] = 1;
-//                 }
-//             }
-//         }
-//     }
-//     map<int, map<char, int>> new_transition_table;
-//     for (auto it: transition_table) {
-//         for (int i = 0;i<sets.size();i++) {
-//             vector<int> v = sets[i];
-//             if (find(v.begin(), v.end(), it.first) != v.end()) {
-//                 new_transition_table[i] = it.second;
-//             }
-//         }
-//     }
-//     transition_table = new_transition_table;
-//     // for memory optimization do the same for other attributes
-//     for (auto& it : new_transition_table) {
-//         set<Node*> nodes = get_Nodes_from_id(it.first);
-//         bool found = false;
-//         for (auto& node: nodes) {
-//             if (node->get_is_start()) {
-//                 starting_id = it.first;
-//                 found = true;
-//                 break;
-//             }
-//         }
-//         if (found) break;
-//     }
-// }
 
 void DFA::minimize() {
     vector<vector<int>> partitionedStates = split_ids();
@@ -145,19 +102,27 @@ void DFA::minimize() {
         }
     }
     transition_table = updatedTransitionTable;
+    //update mapps
+    map<int, set<Node*>> new_id_to_state;
+    map<set<Node*>, int> new_state_to_id;
+    for (int i = 0;i<partitionedStates.size();i++) {
+        set<Node*> eq;
+        for (int state: partitionedStates[i]) {
+            set<Node*> old = id_to_state[state];
+            eq.insert(old.begin(), old.end());
+        }
+        new_id_to_state[i] = eq;
+        new_state_to_id[eq] = i;
+    }
+    id_to_state = new_id_to_state;
+    state_to_id = new_state_to_id;
 
-    // Optimize memory usage for other attributes
-
-    // Find the new starting state ID
-    for (int groupIndex = 0; groupIndex < partitionedStates.size(); groupIndex++) {
-        const vector<int>& currentGroup = partitionedStates[groupIndex];
-        for (int state : currentGroup) {
-            set<Node*> associatedNodes = get_Nodes_from_id(state);
-            for (auto& node : associatedNodes) {
-                if (node->get_is_start()) {
-                    starting_id = groupIndex;
-                    return;
-                }
+    //Find the new starting state ID
+    for (auto& it: state_to_id) {
+        for (Node* node: it.first) {
+            if (node->get_is_start()) {
+                starting_id = it.second;
+                return;
             }
         }
     }
@@ -165,7 +130,6 @@ void DFA::minimize() {
 
 vector<vector<int>> DFA::split(vector<int> elems, map<vector<int>, int> mapp) {
     vector<vector<int>> out;
-    // vector<char> chars = {'a','b','c'};
     map<vector<int>, vector<int>> m;
     for (int i = 0;i<elems.size();i++) {
         vector<int> nexts(chars.size(), -1);

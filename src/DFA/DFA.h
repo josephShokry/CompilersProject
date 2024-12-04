@@ -26,12 +26,19 @@ private:
     vector<vector<int>> split_ids();
     vector<vector<int>> split(vector<int> elems, map<vector<int>, int>);
     int int_to_vec_int(int x, map<vector<int>, int> &mapp);
+
     void update_mapp(map<vector<int>, int> &mapp, vector<vector<int>> &partitionedStates);
+
+    void regenerateMappings();
+
     int get_next_node_id(int node_id, char transition_char);
     set<Node*> getNextNodes(Node* current_node, char transition_char);
 
 public:
     DFA(NFA nfa, NFA_builder nfa_builder);
+
+    set<Node *> getNewState(vector<int> partitionedStates);
+
     void minimize();
     void print_transition_table();
 
