@@ -24,13 +24,13 @@ set<Node *> NFA::get_equivilant_nodes(set<Node *> current_nodes) {
 
 vector<char> NFA::get_transition_chars(NFA_builder nfa_builder) {
     map<string, vector<string> > token_to_regex_split = nfa_builder.get_token_to_regex_split();
-    unordered_set<string> operations = {"(", "|", ")", "*", "+", "#", "$"};
+    unordered_set<char> operations = {'(', '|', ')', '*', '+', '#', '$'};
     set<char> transition_characters;
     for (auto &[token, v] : token_to_regex_split) {
         for (auto &x : v) {
-            if (x.size() == 1 && !operations.contains(x)) {
+            if (x.size() == 1 && operations.find(x[0]) == operations.end()) {
                 transition_characters.insert(x[0]);
-            }else if (x.size() == 2 && x[0] == '\\') {
+            }else if (x.size() == 2 && x[0] == '\\' && operations.find(x[1]) == operations.end()) {
                 transition_characters.insert(x[1]);
             }
         }

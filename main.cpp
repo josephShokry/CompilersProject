@@ -39,6 +39,7 @@ void bfs_co(NFA nfa, map<string, int> priority) {
 int main() {
     NFA_builder nfa_builder;
 
+    // nfa_builder.extract_rules("../input_rules.txt");
     nfa_builder.extract_rules("../original.txt");
     nfa_builder.split_rules();
     nfa_builder.set_pre_defined_tokens();
@@ -62,4 +63,5 @@ int main() {
     cout<<"##################################################"<<endl;
     dfa.minimize();
     dfa.print_transition_table();
+    cout<<"starting state id is "<<dfa.get_starting_state_id()<<endl;
 }

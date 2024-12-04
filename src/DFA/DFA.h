@@ -21,12 +21,12 @@ private:
 
     int get_id_from_node(Node* node);
 
-    set<Node *> get_Nodes_from_id(int id);
+    set<Node*> get_Nodes_from_id(int id);
 
     vector<vector<int>> split_ids();
     vector<vector<int>> split(vector<int> elems, map<vector<int>, int>);
     int int_to_vec_int(int x, map<vector<int>, int> &mapp);
-    void update_mapp(map<vector<int>, int> &mapp, vector<vector<int>> &sets);
+    void update_mapp(map<vector<int>, int> &mapp, vector<vector<int>> &partitionedStates);
     int get_next_node_id(int node_id, char transition_char);
     set<Node*> getNextNodes(Node* current_node, char transition_char);
 
@@ -38,6 +38,7 @@ public:
     Node* get_start_node() {
         return *id_to_state[starting_id].begin();
     }
+    int get_starting_state_id();
     int getNextNodeId(int node_id, char transition_char);
     int getStartingStateId();
     bool isAcceptingState(int node_id);
