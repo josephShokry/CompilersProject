@@ -40,8 +40,8 @@ void bfs_co(NFA nfa, map<string, int> priority) {
 int main() {
     NFA_builder nfa_builder;
 
-    // nfa_builder.extract_rules("../input_rules.txt");
-    nfa_builder.extract_rules("../original.txt");
+    nfa_builder.extract_rules("../input_rules.txt");
+    // nfa_builder.extract_rules("../original.txt");
     nfa_builder.split_rules();
     nfa_builder.set_pre_defined_tokens();
     nfa_builder.map_regex_to_tokens();
@@ -65,7 +65,11 @@ int main() {
     dfa.minimize();
     dfa.print_transition_table();
     cout<<"starting state id is "<<dfa.get_starting_state_id()<<endl;
+    // while (true) {
+        // int i;cin>>i;
+        // if (i == 0)break;
+        lexical_analyser analyser(dfa,"../testFiles/code.txt",nfa_builder.get_priority());
+        analyser.get_all_tokens();
 
-    lexical_analyser analyser(dfa,"../testFiles/code.txt",nfa_builder.get_priority());
-    analyser.get_all_tokens();
+    // }
 }

@@ -157,6 +157,12 @@ void NFA_builder::split_regular_definitions_and_expressions(string rule, int pri
         }
         token += rule_after_resolving_ranges[i];
     }
+    // Flagging regDef to be removed from the combined NFA.
+    string eq = rule_after_resolving_ranges.substr(value_start_index - 1, 1);
+    if (eq == "=") {
+        regdef.insert(token);
+    }
+    //
     string value = rule_after_resolving_ranges.substr(value_start_index);
     token_to_priority[token] = priority;
     token_to_regex_split[token] = vector(1, value);
@@ -427,10 +433,14 @@ NFA NFA_builder::combined_nfa() {
     Node *end = nullptr;
 
     for (auto &[token, nfa]: token_to_NFA) {
+        if (regdef.contains(token)) {
+            continue;
+        }
         start->add_neighbour(eps_ch, nfa.get_start_node());
         nfa.get_start_node()->set_is_start(false);
         end = nfa.get_end_node();
     }
+    // cleanup_definitions();
 
     auto set_ids = std::function<void(Node *, int &)>{};
     set_ids = [&](Node *node, int &id) {
@@ -455,4 +465,12 @@ map<string, int> NFA_builder::get_priority() {
     return token_to_priority;
 }
 
-
+void NFA_builder::cleanup_definitions() {
+    for (const string &token : regdef) {
+        // Erase definitions from all relevant maps
+        token_to_NFA.erase(token);
+        token_to_regex_split.erase(token);
+        token_to_priority.erase(token);
+        pre_defined_tokens.erase(token);
+    }
+}

@@ -22,21 +22,27 @@ set<Node *> NFA::get_equivilant_nodes(set<Node *> current_nodes) {
     return next;
 }
 
-vector<char> NFA::get_transition_chars(NFA_builder nfa_builder) {
-    map<string, vector<string> > token_to_regex_split = nfa_builder.get_token_to_regex_split();
-    unordered_set<char> operations = {'(', '|', ')', '*', '+', '#', '$'};
-    set<char> transition_characters;
-    for (auto &[token, v] : token_to_regex_split) {
-        for (auto &x : v) {
-            if (x.size() == 1 && operations.find(x[0]) == operations.end()) {
-                transition_characters.insert(x[0]);
-            }else if (x.size() == 2 && x[0] == '\\' && operations.find(x[1]) == operations.end()) {
-                transition_characters.insert(x[1]);
+vector<char> NFA::get_transition_chars() {
+    unordered_set<int> visited;
+    queue<Node*> q;
+    q.push(get_start_node());
+    visited.insert(get_start_node()->get_id());
+    set<char>transitions_set;
+    while (!q.empty()) {
+        Node* current = q.front();
+        q.pop();
+        for (const auto& [symbol, neighbours] : current->get_neighbours()) {
+            transitions_set.insert(symbol);
+            for (Node* neighbour : neighbours) {
+                if (!visited.contains(neighbour->get_id())) {
+                    visited.insert(neighbour->get_id());
+                    q.push(neighbour);
+                }
             }
         }
     }
-    vector<char> transition_vector(transition_characters.begin(), transition_characters.end());
-    return transition_vector;
+    transitions_set.erase('$');
+    return {transitions_set.begin(), transitions_set.end()};
 }
 
 set<Node *> NFA::get_next_nodes(set<Node *> current_nodes, char transition) {

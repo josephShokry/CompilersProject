@@ -6,7 +6,7 @@
 using namespace std;
 DFA::DFA(NFA nfa, NFA_builder nfa_builder) {
     int id = 0;
-    chars = nfa.get_transition_chars(nfa_builder);
+    chars = nfa.get_transition_chars();
     token_to_priority = nfa_builder.get_priority();
     queue<set<Node*>> q;
     set<Node*> sett;
@@ -20,7 +20,7 @@ DFA::DFA(NFA nfa, NFA_builder nfa_builder) {
         set<Node*> cur = q.front();
         int cur_id = state_to_id[cur];
         q.pop();
-        for (char& ch : nfa.get_transition_chars(nfa_builder)) {
+        for (char& ch : nfa.get_transition_chars()) {
             set<Node*> nei = nfa.get_next_nodes(cur, ch);
             set<Node*> eq = nfa.get_equivilant_nodes(nei);
             nei.insert(eq.begin(), eq.end());

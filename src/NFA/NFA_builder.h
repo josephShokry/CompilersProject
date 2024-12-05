@@ -18,6 +18,7 @@ private:
     map<string, NFA> token_to_NFA;
     vector<string> rules;
     unordered_set<string> pre_defined_tokens;
+    unordered_set<string> regdef;
 
     void delete_character_from_string(string &rule, const char letter);
 
@@ -45,6 +46,8 @@ private:
 
     NFA kleene_plus(NFA NFA_1);
 
+    void cleanup_definitions();
+
 public:
     void extract_rules(string rules_file_path);
 
@@ -70,6 +73,7 @@ public:
     map<string, vector<string> > get_token_to_regex_split();
 
     map<string, int> get_priority();
+
 
     NFA deep_copy_nfa(NFA original);
 
