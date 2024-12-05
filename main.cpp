@@ -66,6 +66,6 @@ int main() {
     dfa.print_transition_table();
     cout<<"starting state id is "<<dfa.get_starting_state_id()<<endl;
 
-    lexical_analyser analyser(dfa,"../testFiles/code.txt");
+    lexical_analyser analyser(dfa,"../testFiles/code.txt",nfa_builder.get_priority());
     analyser.get_all_tokens();
 }

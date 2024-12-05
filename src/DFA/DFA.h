@@ -19,10 +19,6 @@ private:
     map<set<Node*>, int> state_to_id;
     map<int,map<char,int>> transition_table;
 
-    int get_id_from_node(Node* node);
-
-    set<Node*> get_Nodes_from_id(int id);
-
     vector<vector<int>> split_ids();
     vector<vector<int>> split(vector<int> elems, map<vector<int>, int>);
     int int_to_vec_int(int x, map<vector<int>, int> &mapp);
@@ -41,6 +37,9 @@ public:
 
     void minimize();
     void print_transition_table();
+
+    int get_id_from_node(Node* node);
+    set<Node*> get_Nodes_from_id(int id);
 
     Node* get_start_node() {
         return *id_to_state[starting_id].begin();

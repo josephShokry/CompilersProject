@@ -454,3 +454,5 @@ map<string, vector<string> > NFA_builder::get_token_to_regex_split() {
 map<string, int> NFA_builder::get_priority() {
     return token_to_priority;
 }
+
+

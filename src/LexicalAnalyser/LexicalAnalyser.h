@@ -14,6 +14,8 @@ private:
     string code_text = "";
     map<string,string> symbol_table;
     int current_index = 0;
+    map<string, int> token_to_priority;
+
 
 
 public:
@@ -33,8 +35,8 @@ public:
         cout<<text;
         this->code_text = text;
     }
-    lexical_analyser(DFA dfa, string file_path_to_code_text)
-        : dfa(dfa) {
+    lexical_analyser(DFA dfa, string file_path_to_code_text, map<string, int> token_to_priority)
+      : dfa(dfa) , token_to_priority(token_to_priority) {
         extract_code_text(file_path_to_code_text);
     }
 
@@ -56,8 +58,20 @@ public:
             new_states_ids.pop();
             if (dfa.isAcceptingState(next_node_id)) {
                 // token priority
+                string filename = "../testFiles/outputfile.text";
+                ofstream outfile(filename, ios::app);
+                if (!outfile.is_open()) {
+                    std::cerr << "Error: Could not open file " << filename << " for writing." << std::endl;
+                    break;
+                }
+
+                string high_priority_token = this->get_high_priority_token(next_node_id);
                 string token = code_text.substr(start_index, current_index - start_index);
-                cout<< "Token found starting from index: "<< start_index <<" the token: "<< token<<"\n";
+                if (isKeyword(token)) outfile<<token<<"\n";
+                else outfile <<high_priority_token<<" ("<<token<<")\n";
+                cout<< "Token found starting from index: "<< start_index <<" the token ("<<high_priority_token<<") : "<< token<<"\n";
+                outfile.close();
+
                 return token ;
             }
             current_index--;
@@ -66,7 +80,7 @@ public:
         //     cout << "No token found starting from index: "<< start_index <<"with char: "<< code_text[start_index]<<"\n";
         //     current_index++;
         // }
-        cout << "No token found starting from index: "<< start_index <<" with char: "<< code_text[start_index]<<"\n";
+        cout << "Error:No token found starting from index: "<< start_index <<" with char: "<< code_text[start_index]<<"\n";
         current_index++;
         return "";
     }
@@ -80,9 +94,33 @@ public:
         current_index = 0;
     }
     void get_all_tokens() {
+        string filename = "../testFiles/outputfile.text";
+        std::ofstream outfile(filename, std::ios::trunc);
         while (has_next()) {
             get_next_token();
         }
         reset_index();
+    }
+
+    string get_high_priority_token(int node_id) {
+        string high_priority_token ;
+        int min_value = 22;
+        set<Node*> nodes = dfa.get_Nodes_from_id(node_id);
+        for (auto node : nodes) {
+            if (!node->get_is_accepting())continue;
+            for (auto tokens :node->get_tokens()) {
+                if (token_to_priority[tokens] < min_value) {
+                    min_value = token_to_priority[tokens];
+                    high_priority_token = tokens;
+                }
+            }
+        }
+        return high_priority_token;
+    }
+    bool isKeyword(const std::string& word) {
+        static const std::unordered_set<std::string> keywords = {
+            "int", "float", "boolean", "if", "else", "while"
+        };
+        return keywords.find(word) != keywords.end();
     }
 };
