@@ -67,8 +67,14 @@ public:
 
                 string high_priority_token = this->get_high_priority_token(next_node_id);
                 string token = code_text.substr(start_index, current_index - start_index);
-                if (isKeyword(token)) outfile<<token<<"\n";
-                else outfile <<high_priority_token<<" ("<<token<<")\n";
+                if (isKeyword(token)) {
+                    symbol_table[token] = token;
+                    outfile<<token<<"\n";
+                }
+                else {
+                    symbol_table[token] = high_priority_token;
+                    outfile <<high_priority_token<<" ("<<token<<")\n";
+                }
                 cout<< "Token found starting from index: "<< start_index <<" the token ("<<high_priority_token<<") : "<< token<<"\n";
                 outfile.close();
 
