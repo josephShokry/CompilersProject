@@ -179,12 +179,20 @@ set<Node*> DFA::get_Nodes_from_id(int id) {
 }
 
 vector<vector<int>> DFA::split_ids() {
-    vector<vector<int>> ids(2);
+    vector<vector<int>> ids(1);
+    map<string, int> accepting_index;
     for (const auto& [node_set, id] : state_to_id) {
         bool accepting = false;
         for (Node* node: node_set) {
             if (node->get_is_accepting()) {
-                ids[1].push_back(id);
+                string token = node->get_tokens()[0];
+                if (!accepting_index.contains(token)) {
+                    ids.push_back({id});
+                    accepting_index[token] = ids.size()-1;
+                }
+                else {
+                    ids[accepting_index[token]].push_back(id);
+                }
                 accepting = true;
                 break;
             }
