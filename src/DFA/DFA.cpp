@@ -7,6 +7,7 @@ using namespace std;
 DFA::DFA(NFA nfa, NFA_builder nfa_builder) {
     int id = 0;
     chars = nfa.get_transition_chars(nfa_builder);
+    token_to_priority = nfa_builder.get_priority();
     queue<set<Node*>> q;
     set<Node*> sett;
     sett.insert(nfa.get_start_node());
@@ -185,19 +186,21 @@ vector<vector<int>> DFA::split_ids() {
         bool accepting = false;
         for (Node* node: node_set) {
             if (node->get_is_accepting()) {
-                string token = node->get_tokens()[0];
-                if (!accepting_index.contains(token)) {
-                    ids.push_back({id});
-                    accepting_index[token] = ids.size()-1;
-                }
-                else {
-                    ids[accepting_index[token]].push_back(id);
-                }
                 accepting = true;
                 break;
             }
         }
-        if (!accepting) {
+        if (accepting) {
+            string token = get_high_priority_token(id);
+            if (!accepting_index.contains(token)) {
+                ids.push_back({id});
+                accepting_index[token] = ids.size()-1;
+            }
+            else {
+                ids[accepting_index[token]].push_back(id);
+            }
+        }
+        else {
             ids[0].push_back(id);
         }
     }
@@ -244,3 +247,18 @@ bool DFA::isAcceptingState(int node_id) {
     return false;
 }
 
+string DFA::get_high_priority_token(int node_id) {
+    string high_priority_token ;
+    int min_value = 22;
+    set<Node*> nodes = get_Nodes_from_id(node_id);
+    for (auto node : nodes) {
+        if (!node->get_is_accepting())continue;
+        for (auto tokens :node->get_tokens()) {
+            if (token_to_priority[tokens] < min_value) {
+                min_value = token_to_priority[tokens];
+                high_priority_token = tokens;
+            }
+        }
+    }
+    return high_priority_token;
+}

@@ -18,6 +18,7 @@ private:
     map<int,set<Node*>> id_to_state;
     map<set<Node*>, int> state_to_id;
     map<int,map<char,int>> transition_table;
+    map<string, int> token_to_priority;
 
     vector<vector<int>> split_ids();
     vector<vector<int>> split(vector<int> elems, map<vector<int>, int>);
@@ -48,6 +49,7 @@ public:
     int getNextNodeId(int node_id, char transition_char);
     bool isAcceptingState(int node_id);
 
+    string get_high_priority_token(int node_id);
 };
 
 
